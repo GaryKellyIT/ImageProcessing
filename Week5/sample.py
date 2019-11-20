@@ -46,23 +46,23 @@ img = image_resize(img, height = 500)
 
 cimg = img.copy()
 
-##lower_black = np.array([0,0,0])
-##upper_black = np.array([90,90,90])
-##
-##maskblack = cv2.inRange(img, lower_black, upper_black)
-##cv2.imshow('maskblack', maskblack)
-##
-##
-##contours,_ = cv2.findContours(maskblack, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_NONE)
-##contours = sorted(contours, key=cv2.contourArea, reverse=True)
-##hull =cv2.convexHull(contours[0])
-##cv2.polylines(cimg,pts=hull,isClosed=True,color=(0,255,255))
-##
-##
-##x,y,w,h=cv2.boundingRect(contours[0])
-##cv2.rectangle(cimg,(x,y),(x+w,y+h),(0,255,0),2)
-##
-##
+lower_black = np.array([0,0,0])
+upper_black = np.array([90,90,90])
+
+maskblack = cv2.inRange(img, lower_black, upper_black)
+cv2.imshow('maskblack', maskblack)
+
+
+contours,_ = cv2.findContours(maskblack, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_NONE)
+contours = sorted(contours, key=cv2.contourArea, reverse=True)
+hull =cv2.convexHull(contours[0])
+cv2.polylines(cimg,pts=hull,isClosed=True,color=(0,255,255))
+
+
+x,y,w,h=cv2.boundingRect(contours[0])
+cv2.rectangle(cimg,(x,y),(x+w,y+h),(0,255,0),2)
+
+
 newimg = img
 
 ##cv2.imshow('cimg', cimg)
@@ -183,8 +183,8 @@ elif y_circles is not None:
     else:
         print("{} yellow circles found".format(ysize))
         
-##x,y,w,h=cv2.boundingRect(contours[0])
-##cimg[y:y+h,x:x+w] = newimg
+x,y,w,h=cv2.boundingRect(contours[0])
+cimg[y:y+h,x:x+w] = newimg
 cv2.imshow('detected results', newimg)
 
 cv2.waitKey(0)
