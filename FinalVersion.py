@@ -1,3 +1,56 @@
+'''
+Authors: Gary Kelly - C16380531, Patrick O'Connor - C16462144, Tega Orogun - C
+Task: Image Processing Project: Traffic Light Detection
+Method: 1.User starts the program in command line by running command to start application
+          and pass an input image or video as an argument like so 'python FinalVersion.py --input "input/GreenLight.jpg"'.
+          Argument is taken in using argparse.
+        2.Program checks that the users python version is 3 or higher and the filetype matches
+          one of the accepted file types declared in the accepted file types lists.
+        3.The program checks whether the file is a video or image file and gives error messages
+          if filetype is not accepted.
+        4.If the filetype is a video the file is opened and passed frame by frame into our traffic
+          light detection function which returns the frame with a bounding box around the detected
+          light and a circle on the detected colour traffic light whilst also outputting in the terminal
+          the colour of the light detected.
+        5.If the filetype is an image it repeats the above step and outputs the resulting image.
+        6.The traffic light detection function works like this:
+            1)Take in image
+            2)Threshold for black
+            3)Find largest contour
+            4)Create bounding box around this contour
+            4)Use this bounding box as region of interest
+            5)Create 3 masks using this ROI - one for each of the colours of the traffic light
+            6)Perform Hough circles transfor on each of these masks and display resulting circles
+            7)Output the colour of the circle found
+            8)Return image displaying the bounding box and Hough circle
+        7.After displaying the image prompt the user for input - either "w" to write image to current
+          directory or "other key" to skip this part. (Videos are automatically written to current directory
+          as they are working with multiple frames so waiting for user input would force us to run another loop
+          through the video and this would be inefficient)
+        8.The user is prompted to either press "a" to enter a new file in which to run the program on or to
+          press "q" to quit the program. If a user enters any other character the program will close regardless.
+        
+Refrences: Used an online tutorial on how to work with the argparse package in order to
+          take in command line arguments -
+          https://www.pyimagesearch.com/2018/03/12/python-argparse-command-line-arguments/
+
+          Used a function found on stack overflow to resize an image to a given height or
+          width whilst keeping the aspect ratio -
+          https://stackoverflow.com/questions/44650888/resize-an-image-without-distortion-opencv/44659589#44659589
+
+          Teknomo,K. (2017) Video Analysis using OpenCV-Python
+          http://people.revoledu.com/kardi/tutorial/Python/
+
+          HevLfreis “TrafficLight-Detector” Online Github Repoistory
+          https://github.com/HevLfreis/TrafficLight-Detector/blob/master/src/main.py?fbclid=IwAR0LNP8zjK_nsFaS9FS15r-X5cpZW18ExW8PDOKaSrLdkFP-eETCwx2u9Qc
+
+          De Charette, R. and Nashashibi, F., 2009, October. Traffic light recognition using image processing compared to learning processes.
+          In 2009 IEEE/RSJ International Conference on Intelligent Robots and Systems (pp. 333-338). IEEE.
+
+          Kenan Alkiek, May 4 2018 – “Traffic Light Recognition — A Visual Guide”
+          https://medium.com/@kenan.r.alkiek/https-medium-com-kenan-r-alkiek-traffic-light-recognition-505d6ab913b1
+'''
+
 import sys
 import argparse
 import os
@@ -18,7 +71,11 @@ if sys.version_info[0]<3 :
     print("Version of python 3 does not meet minimum standard. Please install Python 3 or higher!")
     exit()
 
-
+'''
+-------------------------------------------
+functions
+-------------------------------------------
+'''
 def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
             # initialize the dimensions of the image to be resized and
             # grab the image size
@@ -195,7 +252,12 @@ def findTrafficLight(image):
     x,y,w,h=cv2.boundingRect(contours[0])
     cimg[y:y+h,x:x+w] = newimg
     return cimg
-                        
+
+'''
+-------------------------------------------
+Take in arguments
+-------------------------------------------
+'''                        
 #declare accepted filtetypes
 accepted_filetype = [".PNG",".png",".JPEG",".jpg",".jpeg",".JPG"]
 accepted_video_filetype = [".MP4",".mp4",".AVI",".avi"]
@@ -208,6 +270,11 @@ arg = ap.add_argument("-i", "--input", required=True,
 args = vars(ap.parse_args())
 
 
+'''
+-------------------------------------------
+Program loop
+-------------------------------------------
+'''
 while True:
     filetype_error = True
     count = 0
@@ -217,10 +284,12 @@ while True:
     if path.exists(args["input"]):
         for filetype in range(len(accepted_filetype)) :
             if args["input"].endswith(accepted_filetype[filetype]):
+                print(filetype)
+                print(accepted_filetype[filetype])
                 filetype_error = False
                 input_type = "image"
                 accepted_filetype = accepted_filetype[filetype]
-                print("test")
+                print(accepted_filetype)
                 break
             
         for filetype in range(len(accepted_video_filetype)) :
@@ -299,7 +368,7 @@ while True:
     key = cv2.waitKey(0)
         
     if key == ord("a"):
-        args["input"] = input("Choose next file for reading")
+        args["input"] = input("Choose next file for reading\n")
         print(args["input"])
         cv2.destroyAllWindows()
         del key
@@ -315,3 +384,11 @@ while True:
 
 
 cv2.destroyAllWindows()
+'''
+Concluding comment - The program works exactly how I had hoped when starting this project.
+                     Each of the test images and videos provided give correct feedback and
+                     the user interface is very easy to manage and allows the user to run the
+                     program without having to run the application each time which is pretty
+                     neat. All in all I am happy with the performance of the system and eager
+                     to see how it performs in a real life scenario with my final year project.
+'''
