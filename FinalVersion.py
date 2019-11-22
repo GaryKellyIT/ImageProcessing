@@ -1,5 +1,5 @@
 '''
-Authors: Gary Kelly - C16380531, Patrick O'Connor - C16462144, Tega Orogun - C
+Authors: Gary Kelly - C16380531, Patrick O'Connor - C16462144, Tega Orogun - C16518763
 Task: Image Processing Project: Traffic Light Detection
 Method: 1.User starts the program in command line by running command to start application
           and pass an input image or video as an argument like so 'python FinalVersion.py --input "input/GreenLight.jpg"'.
@@ -50,7 +50,6 @@ Refrences: Used an online tutorial on how to work with the argparse package in o
           Kenan Alkiek, May 4 2018 – “Traffic Light Recognition — A Visual Guide”
           https://medium.com/@kenan.r.alkiek/https-medium-com-kenan-r-alkiek-traffic-light-recognition-505d6ab913b1
 '''
-
 import sys
 import argparse
 import os
@@ -107,9 +106,14 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
             # return the resized image
             return resized
 
-def findTrafficLight(image):
-    cimg = img.copy()
+def findTrafficLight(img):
+    
 
+    if input_type == "image":
+        img = image_resize(img, height = 500)
+
+    cimg = img.copy()
+    
     lower_black = np.array([0,0,0])
     upper_black = np.array([90,90,90])
 
@@ -269,34 +273,32 @@ arg = ap.add_argument("-i", "--input", required=True,
         help="path to input image/video")
 args = vars(ap.parse_args())
 
-
+input_file_location = "Input/"
+output_file_location = "Output/"
 '''
 -------------------------------------------
 Program loop
 -------------------------------------------
 '''
 while True:
-    filetype_error = True
+    filetype_error = True 
     count = 0
-    print(args["input"])
-    
+    file_input_name = args["input"]
+    args["input"] = input_file_location + args["input"]
     #loop through accepted filetypes and ensure that the inputted file ends with one of these
     if path.exists(args["input"]):
         for filetype in range(len(accepted_filetype)) :
             if args["input"].endswith(accepted_filetype[filetype]):
-                print(filetype)
-                print(accepted_filetype[filetype])
                 filetype_error = False
                 input_type = "image"
-                accepted_filetype = accepted_filetype[filetype]
-                print(accepted_filetype)
+                filetype_used = accepted_filetype[filetype]
                 break
             
         for filetype in range(len(accepted_video_filetype)) :
             if args["input"].endswith(accepted_video_filetype[filetype]):
                 filetype_error = False
                 input_type = "video"
-                accepted_filetype = accepted_video_filetype[filetype]
+                filetype_used = accepted_video_filetype[filetype]
                 break
                 
         if filetype_error == True:
@@ -347,9 +349,9 @@ while True:
         cv2.imshow('detected results', cimg)
 
         #Format file output name based on input filename
-        tmpName = args["input"].split(accepted_filetype)
+        tmpName = file_input_name.split(filetype_used)
         tmpName[len(tmpName)-2] += "output"
-        fileOutputName = tmpName[len(tmpName)-2] + accepted_filetype
+        fileOutputName = output_file_location + tmpName[len(tmpName)-2] + filetype_used
         print(fileOutputName)
 
         print("Press w to write output to current directory or space to continue")
@@ -369,7 +371,6 @@ while True:
         
     if key == ord("a"):
         args["input"] = input("Choose next file for reading\n")
-        print(args["input"])
         cv2.destroyAllWindows()
         del key
 
