@@ -145,9 +145,7 @@ def findTrafficLight(img):
     upper_red2 = np.array([180,255,255])
     lower_green = np.array([40,140,90])
     upper_green = np.array([90,255,255])
-    # lower_yellow = np.array([15,100,100])
-    # upper_yellow = np.array([35,255,255])
-    lower_yellow = np.array([15,210,170])#lower_yellow = np.array([15,150,150])
+    lower_yellow = np.array([15,150,150])
     upper_yellow = np.array([35,255,255])
     mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
     mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
@@ -157,7 +155,7 @@ def findTrafficLight(img):
     #cv2.imshow('img', img)
     ##cv2.imshow('maskg', maskg)
     ##cv2.imshow('masky', masky)
-    ##cv2.imshow('maskr', maskr)
+    #cv2.imshow('maskr', maskr)
     ##cv2.imshow("g", np.hstack([img, maskg]))
     ##cv2.imshow("r", np.hstack([img, maskr]))
     ##cv2.imshow("y", np.hstack([img, masky]))
@@ -285,6 +283,7 @@ while True:
     count = 0
     file_input_name = args["input"]
     args["input"] = input_file_location + args["input"]
+    
     #loop through accepted filetypes and ensure that the inputted file ends with one of these
     if path.exists(args["input"]):
         for filetype in range(len(accepted_filetype)) :
@@ -352,7 +351,6 @@ while True:
         tmpName = file_input_name.split(filetype_used)
         tmpName[len(tmpName)-2] += "output"
         fileOutputName = output_file_location + tmpName[len(tmpName)-2] + filetype_used
-        print(fileOutputName)
 
         print("Press w to write output to current directory or space to continue")
         key = cv2.waitKey(0)
